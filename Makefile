@@ -6,4 +6,5 @@ clean:
 	pushd part4 && $(MAKE) clean && popd
 	pushd part5 && $(MAKE) clean && popd
 	pushd part6 && $(MAKE) clean && popd
+	pushd part8 && $(MAKE) clean && popd
 

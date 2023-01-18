@@ -93,3 +93,18 @@
 * Side quiz in `exec`:
  * How much memory will be allocated for the data structures?
 
+# Part 8: Symbold Versioning
+
+* We have two `libfoo`, one version 1, the other version 2
+* They both have map files that denote which symbols should be available in which version
+* We update `foo`, so there are two incompatible versions
+* To facilitate this, in v2, we don't call either just foo, and instead introduce some assembly magic that creates artifical symbols mapped to our function definitions
+ * Exactly one needs to be denoted with double @. This will be the default version used when linking against this library.
+* We can also introduce new functions that are only available in the new version
+* When linking this together, we need to supply the map files
+* The linker will then create versioned symbols, see `nm` output --> this is exactly what glibc does
+* When normally linking, we don't see anything
+* But now imagine we have a normal Linux distribution where only binary packages are installed and we update our library. Instead of needing to build each application depending on it again, we can just update the lib by introducing a new major version for our symbol, and applications can continue to use the old implementation
+ * Show with LD_LIBRARY_PATH and `exec_flex_v1`
+ * We can't downgrade to an older version, obviously (show with LD_LIBRARY_PATH and `exec_flex_v2`)
+
