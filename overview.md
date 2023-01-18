@@ -46,6 +46,8 @@
 # Part 4: Overriding library functions at link time
 
 * -Wl,-wrap
+* This only works with static libraries, not with shared libraries
+* All the necessary symbols have to be linked together in one go.
 
 # Part 5: Dynamic symbol table and lookups
 
@@ -61,7 +63,33 @@
 # Part 6: Preloading
 
 * LD_PRELOAD
+* We need to take care to initialize iostreams
+* We are effectively loading our own library as the first one, even before `libc.so`.
+* This results in our symbols being the first to be looked up in the PLT
+* We can override everything! muahahaha
+ * Except we can't.
+ * LD_PRELOAD only works if RUID == EUID. This can be demonstrated with our `exec` binary. It will output the EUID.
+ * Execute `exec` with `libmemleak.so` preloaded. We see memory allocations.
+ * Do `sudo chown nobody:nobody exec` and `sudo chmod u+s exec`
+ * Show that it is now setuid nobody with `stat exec`
+ * Execute it again with `libmemleak.so` preloaded. No memory allocations can be seen.
+* Why do we see any output at all on `exec`?
+ * The C runtime reserves 1024 bytes for internal usage on startup
+ * The C++ runtime reserves 72704 bytes for internal use.
+ * As far as I know this is mainly necessary for I/O.
+ * But why do we even see the C++ memory usage? This is a pure C program?
+  * But the library links against libstdc++ and also has the C++ initialization routines
+  * But, this is also a topic for my other talk "Life before main"
 
-# Part 6: Magic
+# Part 7: Magic
 
 * Constructor and Destructor
+* These are special attributes to gcc and clang
+* You can define as many constructors and destructors as you want, also in libraries
+* Constructors get executed before `main`, destructors after `main` has returned
+* There is no specific order, but you may give priority hints to the compiler
+* This also works with preloading!
+
+* Side quiz in `exec`:
+ * How much memory will be allocated for the data structures?
+
