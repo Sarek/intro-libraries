@@ -1,7 +1,7 @@
 all: exec_link exec_nolink
 
 libfoo.so: foo.c
-	gcc -shared foo.c -o libfoo.so
+	gcc -shared -fPIC foo.c -o libfoo.so
 
 exec_link: exec.cpp libfoo.so
 	g++ exec.cpp -o exec_link -L. -lfoo -Wl,-rpath,.

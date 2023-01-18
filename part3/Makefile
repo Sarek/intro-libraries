@@ -22,10 +22,10 @@ exec_dynamic_barfoo: exec.c foobar.h libfoo_dynamic.so libbar_dynamic.so
 	gcc exec.c -o exec_dynamic_barfoo -L. -lbar_dynamic -lfoo_dynamic -Wl,-rpath,.
 
 libfoo_dynamic.so: foo.c
-	gcc -shared foo.c -o libfoo_dynamic.so
+	gcc -shared -fPIC foo.c -o libfoo_dynamic.so
 
 libbar_dynamic.so: bar.c
-	gcc -shared bar.c -o libbar_dynamic.so
+	gcc -shared -fPIC bar.c -o libbar_dynamic.so
 
 clean:
-	rm -f exec_static_foobar exec_static_barfoo libfoo_static.a libbar_static.a exec_dynamic_foobar exec_dynamic_barfoo libfoo_dynamic.so libbar_dynamic.so
+	rm -f exec_static_foobar exec_static_barfoo libfoo_static.a libbar_static.a exec_dynamic_foobar exec_dynamic_barfoo libfoo_dynamic.so libbar_dynamic.so bar_static.o foo_static.o

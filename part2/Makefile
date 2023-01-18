@@ -15,7 +15,7 @@ beta_static.o: beta.c beta.h
 
 
 libfoo.so: alpha_fpic.o beta_fpic.o
-	gcc -shared alpha_fpic.o beta_fpic.o -o libfoo.so
+	gcc -shared -fPIC alpha_fpic.o beta_fpic.o -o libfoo.so
 
 libbar.a: alpha_static.o beta_static.o
 	ar rcs libbar.a alpha_static.o beta_static.o
